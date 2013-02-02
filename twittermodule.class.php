@@ -29,8 +29,8 @@ class twittermodule extends gen_class {
 	 */
 	public function twittermodule(){
 		$this->checkURL_first = true;
-		$this->rssurl = "https://api.twitter.com/1/statuses/user_timeline/".$this->config->get('pm_twitter_account').".json";
-		$this->parseJSON($this->GetRSS($this->rssurl));
+		$this->twitter_screenname = $this->config->get('pm_twitter_account');
+		$this->parseJSON($this->GetRSS($this->twitter_screenname));
 
 		if (is_array($this->news) && count($this->news) > 0){
 			$this->createTPLvar($this->news);
@@ -66,7 +66,7 @@ class twittermodule extends gen_class {
 				}
 			}else{ //nothing in DB
 				if ($this->config->get('pm_twitter_account') != ""){
-					$this->tpl->add_js('$.get("'.$this->root_path.'portal/twitter/update.php");');
+					$this->tpl->add_js('$.get("'.$this->root_path.'portal/twitter/update.php'.$this->SID.'");');
 				}
 				return false;
 			}
@@ -82,27 +82,37 @@ class twittermodule extends gen_class {
 	 */
 	 
 	public function decodeRSS($rss){
-		$rss_string = @base64_decode($rss);
-		$rss_string = @gzuncompress($rss_string);
+		$rss_string = unserialize($rss);
 		return $rss_string;
 	}
 
 	public function updateRSS(){
 		$cachetime = ($this->config->get('pm_twitter_cachetime')) ? ($this->config->get('pm_twitter_cachetime')*3600) : 3600;
-		$rss_string = $this->puf->fetch($this->rssurl) ;
+		
+		include_once($this->root_path.'libraries/twitter/codebird.class.php');
+		Codebird::setConsumerKey(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET); // static, see 'Using multiple Codebird instances'
+
+		$cb = Codebird::getInstance();
+		$cb->setReturnFormat(CODEBIRD_RETURNFORMAT_ARRAY);
+		$cb->setToken(TWITTER_OAUTH_TOKEN, TWITTER_OAUTH_SECRET);
+		$params = array(
+			'screen_name' => $this->twitter_screenname,
+		);
+		$objJSON = $cb->statuses_userTimeline($params);
+		
+		$rss_string = serialize($objJSON);
 
 		if (strlen($rss_string)>1){
 			$this->pdc->del('portal.module.twitter');
 			$sql = "TRUNCATE TABLE __module_twitter ";
 			$this->db->query($sql);
 
-			$rss = @base64_encode(gzcompress($rss_string)) ;
 			$sql = "INSERT INTO __module_twitter SET ".
 				"  updated='".$this->db->escape(time())."'".
-				",  rss='".$this->db->escape($rss)."'";
+				",  rss='".$this->db->escape($rss_string)."'";
 
 			$this->db->query($sql);
-			$this->pdc->put('portal.module.twitter',$rss,$cachetime-5,false,true);
+			$this->pdc->put('portal.module.twitter',$rss_string,$cachetime-5,false,true);
 		}
 	}
 
@@ -113,15 +123,12 @@ class twittermodule extends gen_class {
 	 * @param RSS-XML $rss
 	 */
 	public function parseJSON($json){
-	
-		$objJSON = json_decode($json);
-		
 		$i = 0;
-		if ($objJSON){
-			foreach ($objJSON as $item){
-				$this->news[$i]['text'] 		=  $item->text;
-				$this->news[$i]['created_at']	=  $item->created_at;
-				$this->news[$i]['data']			= $item;
+		if (is_array($json)){
+			foreach ($json as $item){
+				$this->news[$i]['text'] 		=  $item[text];
+				$this->news[$i]['created_at']	=  $item[created_at];
+				$this->news[$i]['data']			=  $item;
 				$i++;
 			}
 		}
@@ -222,24 +229,24 @@ class twittermodule extends gen_class {
 					$author ='<tr><td>
 					<div class="tw_header">
 						<div class="tw_logo">
-							<a href="https://twitter.com/'.sanitize($data->user->screen_name).'" target="_blank">
-							<img src="'.sanitize($data->user->profile_image_url_https).'" alt="'.sanitize($data->user->screen_name).'" />
+							<a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" target="_blank">
+							<img src="'.sanitize($data[user][profile_image_url_https]).'" alt="'.sanitize($data[user][screen_name]).'" />
 							</a>
 						</div>
 						<div class="tw_names">
 							<div class="tw_name">
-							<a href="https://twitter.com/'.sanitize($data->user->screen_name).'" target="_blank">
-							'.sanitize($data->user->name).'
+							<a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" target="_blank">
+							'.sanitize($data[user][name]).'
 							</a>
 							</div>
 							<div class="tw_screenname">
-							<a href="https://twitter.com/'.sanitize($data->user->screen_name).'" target="_blank">
-							@'.sanitize($data->user->screen_name).'
+							<a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" target="_blank">
+							@'.sanitize($data[user][screen_name]).'
 							</a>
 							</div>
 						</div>
 						<div class="tw_follow">
-							    <a href="https://twitter.com/'.sanitize($data->user->screen_name).'" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="'.$this->user->lang('XML_LANG').'">Follow @twitterapi</a>
+							    <a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="'.$this->user->lang('XML_LANG').'">Follow @twitterapi</a>
 
     <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 						</div>
@@ -254,11 +261,11 @@ class twittermodule extends gen_class {
 						</div>
 						<div class=\"tw_actions\">
 							
-							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data->id_str."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\">&nbsp;
+							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data[id_str]."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\">&nbsp;
 							</div>
-							<div class=\"tw_action_retweet\" onclick=\"window.open('https://twitter.com/intent/retweet?tweet_id=".$data->id_str."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_retweet')."\">&nbsp;
+							<div class=\"tw_action_retweet\" onclick=\"window.open('https://twitter.com/intent/retweet?tweet_id=".$data[id_str]."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_retweet')."\">&nbsp;
 							</div>
-							<div class=\"tw_action_reply\" onclick=\"window.open('https://twitter.com/intent/tweet?in_reply_to=".$data->id_str."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_answer')."\">&nbsp;
+							<div class=\"tw_action_reply\" onclick=\"window.open('https://twitter.com/intent/tweet?in_reply_to=".$data[id_str]."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_answer')."\">&nbsp;
 							</div>
 						</div>
 						<div class=\"clear\"></div>
