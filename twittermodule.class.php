@@ -126,8 +126,8 @@ class twittermodule extends gen_class {
 		$i = 0;
 		if (is_array($json)){
 			foreach ($json as $item){
-				$this->news[$i]['text'] 		=  $item[text];
-				$this->news[$i]['created_at']	=  $item[created_at];
+				$this->news[$i]['text'] 		=  $item['text'];
+				$this->news[$i]['created_at']	=  $item['created_at'];
 				$this->news[$i]['data']			=  $item;
 				$i++;
 			}
@@ -229,24 +229,24 @@ class twittermodule extends gen_class {
 					$author ='<tr><td>
 					<div class="tw_header">
 						<div class="tw_logo">
-							<a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" target="_blank">
-							<img src="'.sanitize($data[user][profile_image_url_https]).'" alt="'.sanitize($data[user][screen_name]).'" />
+							<a href="https://twitter.com/'.sanitize($data['user']['screen_name']).'" target="_blank">
+							<img src="'.sanitize($data['user']['profile_image_url_https']).'" alt="'.sanitize($data['user']['screen_name']).'" />
 							</a>
 						</div>
 						<div class="tw_names">
 							<div class="tw_name">
-							<a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" target="_blank">
-							'.sanitize($data[user][name]).'
+							<a href="https://twitter.com/'.sanitize($data['user']['screen_name']).'" target="_blank">
+							'.sanitize($data['user']['name']).'
 							</a>
 							</div>
 							<div class="tw_screenname">
-							<a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" target="_blank">
-							@'.sanitize($data[user][screen_name]).'
+							<a href="https://twitter.com/'.sanitize($data['user']['screen_name']).'" target="_blank">
+							@'.sanitize($data['user']['screen_name']).'
 							</a>
 							</div>
 						</div>
 						<div class="tw_follow">
-							    <a href="https://twitter.com/'.sanitize($data[user][screen_name]).'" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="'.$this->user->lang('XML_LANG').'">Follow @twitterapi</a>
+							    <a href="https://twitter.com/'.sanitize($data['user']['screen_name']).'" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-lang="'.$this->user->lang('XML_LANG').'">Follow @twitterapi</a>
 
     <script type="text/javascript">!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 						</div>
@@ -261,11 +261,11 @@ class twittermodule extends gen_class {
 						</div>
 						<div class=\"tw_actions\">
 							
-							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data[id_str]."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\">&nbsp;
+							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\">&nbsp;
 							</div>
-							<div class=\"tw_action_retweet\" onclick=\"window.open('https://twitter.com/intent/retweet?tweet_id=".$data[id_str]."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_retweet')."\">&nbsp;
+							<div class=\"tw_action_retweet\" onclick=\"window.open('https://twitter.com/intent/retweet?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_retweet')."\">&nbsp;
 							</div>
-							<div class=\"tw_action_reply\" onclick=\"window.open('https://twitter.com/intent/tweet?in_reply_to=".$data[id_str]."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_answer')."\">&nbsp;
+							<div class=\"tw_action_reply\" onclick=\"window.open('https://twitter.com/intent/tweet?in_reply_to=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_answer')."\">&nbsp;
 							</div>
 						</div>
 						<div class=\"clear\"></div>
