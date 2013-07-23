@@ -58,7 +58,7 @@ class twittermodule extends gen_class {
 				$this->updated = $row['updated'];
 				if( (time() - $this->updated) > $cachetime ){
 					//normal update
-					$this->tpl->add_js('$.get("'.$this->root_path.'portal/twitter/update.php");');
+					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php");');
 					
 					$rss_string = $row['rss'];
 				}elseif (isset($row['rss']) ){
@@ -66,7 +66,7 @@ class twittermodule extends gen_class {
 				}
 			}else{ //nothing in DB
 				if ($this->config->get('pm_twitter_account') != ""){
-					$this->tpl->add_js('$.get("'.$this->root_path.'portal/twitter/update.php'.$this->SID.'");');
+					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'");');
 				}
 				return false;
 			}
@@ -173,7 +173,7 @@ class twittermodule extends gen_class {
 			}
 			
 			.tw_action_reply {
-				background-image: url('.$this->root_path.'portal/twitter/images/everything-spritev2.png);
+				background-image: url('.$this->server_path.'portal/twitter/images/everything-spritev2.png);
 				background-position: 0px 0px;
 				width: 16px;
 				height: 16px;
@@ -186,7 +186,7 @@ class twittermodule extends gen_class {
 			}
 			
 			.tw_action_retweet {
-				background-image: url('.$this->root_path.'portal/twitter/images/everything-spritev2.png);
+				background-image: url('.$this->server_path.'portal/twitter/images/everything-spritev2.png);
 				background-position: -80px 0px;
 				width: 16px;
 				height: 16px;
@@ -199,7 +199,7 @@ class twittermodule extends gen_class {
 			}
 			
 			.tw_action_favorit {
-				background-image: url('.$this->root_path.'portal/twitter/images/everything-spritev2.png);
+				background-image: url('.$this->server_path.'portal/twitter/images/everything-spritev2.png);
 				background-position: -32px 0px;
 				width: 16px;
 				height: 16px;
