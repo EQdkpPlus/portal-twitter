@@ -143,7 +143,7 @@ class twittermodule extends gen_class {
 	public function createTPLvar($news){
 		if (is_array($news)){
 			$maxitems = ($this->config->get('pm_twitter_maxitems') == "") ? count($news) : $this->config->get('pm_twitter_maxitems');
-			$table = '<table width="100%" cellspacing="0" cellpadding="2" class="colorswitch">';
+			$table = '<table width="100%" cellspacing="0" cellpadding="2" class="colorswitch border-top">';
 			$bcout = "";
 			
 			$this->tpl->add_css(
@@ -325,5 +325,4 @@ class twittermodule extends gen_class {
 		return sprintf($this->user->lang('pm_twitter_format'), "$difference $period", $tense);
 	}
 }// end of class
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_twittermodule', twittermodule::$shortcuts);
 ?>

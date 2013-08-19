@@ -83,5 +83,4 @@ class twitter_portal extends portal_generic {
 		$this->db->query("TRUNCATE __module_twitter;");
 	}
 }
-if(version_compare(PHP_VERSION, '5.3.0', '<')) registry::add_const('short_twitter_portal', twitter_portal::__shortcuts());
 ?>
