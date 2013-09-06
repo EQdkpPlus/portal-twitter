@@ -17,7 +17,7 @@
  */
  
 class twittermodule extends gen_class {
-	public static $shortcuts = array('core', 'user', 'tpl', 'pdc', 'db', 'config', 'puf'=>'urlfetcher');
+	public static $shortcuts = array('core', 'user', 'tpl', 'pdc', 'db', 'config', 'puf'=>'urlfetcher', 'db2');
 
 	public $output_left = '';
 	public $news		= array();
@@ -53,8 +53,8 @@ class twittermodule extends gen_class {
 		
 		if (!$rss_string){
 			$sql = "SELECT updated,rss FROM __module_twitter";
-			$result = $this->db->query($sql);
-			if($row = $this->db->fetch_record($result)){
+			$result = $this->db2->query($sql);
+			if($row = $result->fetchAssoc()){
 				$this->updated = $row['updated'];
 				if( (time() - $this->updated) > $cachetime ){
 					//normal update
@@ -105,13 +105,13 @@ class twittermodule extends gen_class {
 		if (strlen($rss_string)>1){
 			$this->pdc->del('portal.module.twitter');
 			$sql = "TRUNCATE TABLE __module_twitter ";
-			$this->db->query($sql);
+			$this->db2->query($sql);
+			
+			$this->db2->prepare("INSERT INTO __module_twitter :p")->set(array(
+					'updated'	=> time(),
+					'rss'		=> $rss_string,
+			))->execute();
 
-			$sql = "INSERT INTO __module_twitter SET ".
-				"  updated='".$this->db->escape(time())."'".
-				",  rss='".$this->db->escape($rss_string)."'";
-
-			$this->db->query($sql);
 			$this->pdc->put('portal.module.twitter',$rss_string,$cachetime-5,false,true);
 		}
 	}
