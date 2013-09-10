@@ -22,7 +22,7 @@ if ( !defined('EQDKP_INC') ){
 
 class twitter_portal extends portal_generic {
 	public static function __shortcuts() {
-		$shortcuts = array('pdc', 'config', 'user', 'db2');
+		$shortcuts = array('pdc', 'config', 'user', 'db');
 		return array_merge(parent::$shortcuts, $shortcuts);
 	}
 
@@ -80,7 +80,7 @@ class twitter_portal extends portal_generic {
 
 	public function reset() {
 		$this->pdc->del('portal.module.twitter');
-		$this->db2->query("TRUNCATE __module_twitter;");
+		$this->db->query("TRUNCATE __module_twitter;");
 	}
 }
 ?>
