@@ -30,6 +30,7 @@ class twitter_portal extends portal_generic {
 	protected $data		= array(
 		'name'			=> 'Twitter-Reader',
 		'version'		=> '0.1.0',
+		'icon'			=> 'icon-twitter',
 		'author'		=> 'GodMod',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'Shows a Module with Tweeds',
