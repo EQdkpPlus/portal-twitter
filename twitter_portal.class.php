@@ -70,9 +70,9 @@ class twitter_portal extends portal_generic {
 		return $rss_feeds->output_left;
 	}
 
-	public function reset() {
-		$this->pdc->del('portal.module.twitter');
-		$this->db->query("TRUNCATE __module_twitter;");
+	public static function reset() {
+		register('pdc')->del('portal.module.twitter');
+		register('db')->query("TRUNCATE __module_twitter;");
 	}
 }
 ?>
