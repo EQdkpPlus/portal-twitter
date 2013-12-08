@@ -19,9 +19,9 @@
 	$lang['twitter']				= 'Twitter';
 	$lang['twitter_name']			= 'Twitter';
 	$lang['twitter_desc']			= 'Follow a specific twitter account';
-	$lang['pm_twitter_account']		= 'Twitter-Account';
-	$lang['pm_twitter_maxitems']	= 'Max. Shown Tweeds (empty = no limit)';
-	$lang['pm_twitter_cachetime']	= 'Caching-time in hours (default: 1 hour)';
+	$lang['twitter_f_account']		= 'Twitter-Account';
+	$lang['twitter_f_maxitems']		= 'Max. Shown Tweeds (empty = no limit)';
+	$lang['twitter_f_cachetime']	= 'Caching-time in hours (default: 1 hour)';
 	$lang['pm_twitter_follow']		= 'follow %s at twitter';
 	$lang['pm_twitter_period']		= array("second", "minute", "hour", "day", "week", "month", "year", "decade");
 	$lang['pm_twitter_periods']		= array("seconds", "minutes", "hours", "days", "weeks", "months", "years", "decades");

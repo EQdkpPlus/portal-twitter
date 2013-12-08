@@ -21,49 +21,40 @@ if ( !defined('EQDKP_INC') ){
 }
 
 class twitter_portal extends portal_generic {
-	public static function __shortcuts() {
-		$shortcuts = array('pdc', 'config', 'user', 'db');
-		return array_merge(parent::$shortcuts, $shortcuts);
-	}
 
-	protected $path		= 'twitter';
-	protected $data		= array(
+	protected static $path		= 'twitter';
+	protected static $data		= array(
 		'name'			=> 'Twitter-Reader',
 		'version'		=> '0.1.0',
 		'icon'			=> 'fa-twitter',
 		'author'		=> 'GodMod',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'Shows a Module with Tweeds',
+		'lang_prefix'	=> 'twitter_'
 	);
-	protected $positions = array('left1', 'left2', 'right');
+	protected static $positions = array('left1', 'left2', 'right');
 	protected $settings	= array(
-		'pm_twitter_account'	=> array(
-			'name'				=>	'pm_twitter_account',
-			'language'			=>	'pm_twitter_account',
-			'property'			=>	'text',
-			'size'				=>	'30',
+		'account'	=> array(
+			'type'		=> 'text',
+			'size'		=> '30',
 		),
-		'pm_twitter_maxitems'	=> array(
-			'name'				=>	'pm_twitter_maxitems',
-			'language'			=>	'pm_twitter_maxitems',
-			'property'			=>	'text',
-			'size'				=>	'3',
-			'default'			=> 3,
+		'maxitems'	=> array(
+			'type'		=> 'text',
+			'size'		=> '3',
+			'default'	=> 3,
 		),
-		'pm_twitter_cachetime'	=> array(
-			'name'				=>	'pm_twitter_cachetime',
-			'language'			=>	'pm_twitter_cachetime',
-			'property'			=>	'text',
-			'size'				=>	'3',
+		'cachetime'	=> array(
+			'type'		=>	'text',
+			'size'		=>	'3',
 		),
 	);
-	protected $install	= array(
+	protected static $install	= array(
 		'autoenable'		=> '0',
 		'defaultposition'	=> 'left1',
 		'defaultnumber'		=> '1',
 	);
-	protected $tables	= array('module_twitter');
-	protected $sqls		= array(
+	protected static $tables	= array('module_twitter');
+	protected static $sqls		= array(
 		'CREATE TABLE IF NOT EXISTS __module_twitter (
 		`id` int(11) NOT NULL AUTO_INCREMENT,
 		`updated` int(11) NOT NULL DEFAULT \'0\',

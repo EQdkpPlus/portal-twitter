@@ -17,7 +17,7 @@
  */
  
 class twittermodule extends gen_class {
-	public static $shortcuts = array('core', 'user', 'tpl', 'pdc', 'db', 'config', 'puf'=>'urlfetcher', 'db');
+	public static $shortcuts = array('puf'=>'urlfetcher');
 
 	public $output_left = '';
 	public $news		= array();
@@ -29,7 +29,7 @@ class twittermodule extends gen_class {
 	 */
 	public function twittermodule(){
 		$this->checkURL_first = true;
-		$this->twitter_screenname = $this->config->get('pm_twitter_account');
+		$this->twitter_screenname = $this->config('account');
 		$this->parseJSON($this->GetRSS($this->twitter_screenname));
 
 		if (is_array($this->news) && count($this->news) > 0){
@@ -47,7 +47,7 @@ class twittermodule extends gen_class {
 	 */
 	public function GetRSS($url){
 		$rss_string = null;
-		$cachetime = ($this->config->get('pm_twitter_cachetime')) ? ($this->config->get('pm_twitter_cachetime')*3600) : 3600;
+		$cachetime = ($this->config('cachetime')) ? ($this->config('cachetime')*3600) : 3600;
 
 		$rss_string = $this->pdc->get('portal.module.twitter',false,true);
 		
@@ -65,7 +65,7 @@ class twittermodule extends gen_class {
 					$rss_string = $row['rss'];
 				}
 			}else{ //nothing in DB
-				if ($this->config->get('pm_twitter_account') != ""){
+				if ($this->config('account') != ""){
 					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'");');
 				}
 				return false;
@@ -87,7 +87,7 @@ class twittermodule extends gen_class {
 	}
 
 	public function updateRSS(){
-		$cachetime = ($this->config->get('pm_twitter_cachetime')) ? ($this->config->get('pm_twitter_cachetime')*3600) : 3600;
+		$cachetime = ($this->config('cachetime')) ? ($this->config('cachetime')*3600) : 3600;
 		
 		include_once($this->root_path.'libraries/twitter/codebird.class.php');
 		Codebird::setConsumerKey(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET); // static, see 'Using multiple Codebird instances'
@@ -142,7 +142,7 @@ class twittermodule extends gen_class {
 	 */
 	public function createTPLvar($news){
 		if (is_array($news)){
-			$maxitems = ($this->config->get('pm_twitter_maxitems') == "") ? count($news) : $this->config->get('pm_twitter_maxitems');
+			$maxitems = ($this->config('maxitems') == "") ? count($news) : $this->config('maxitems');
 			$table = '<table width="100%" cellspacing="0" cellpadding="2" class="colorswitch border-top">';
 			$bcout = "";
 			
