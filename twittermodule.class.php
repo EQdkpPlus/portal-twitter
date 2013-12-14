@@ -21,15 +21,22 @@ class twittermodule extends gen_class {
 
 	public $output_left = '';
 	public $news		= array();
+	private $module_id = 0;
+	private $cachetime = 3600;
+	private $maxitems = 5;
 
 	/**
 	 * Constructor
 	 *
 	 * @return rss
 	 */
-	public function twittermodule(){
+	public function twittermodule($id){
+		$this->module_id = $id;
 		$this->checkURL_first = true;
-		$this->twitter_screenname = $this->config('account');
+		$this->twitter_screenname = $this->config->get('account', 'pmod_'.$this->module_id);
+		$this->cachetime = ($this->config->get('cachetime', 'pmod_'.$this->module_id)) ? ($this->config->get('cachetime', 'pmod_'.$this->module_id)*3600) : 3600;
+		$this->maxitems = ($this->config->get('maxitems', 'pmod_'.$this->module_id)) ? ($this->config->get('maxitems', 'pmod_'.$this->module_id)) : 5;
+		
 		$this->parseJSON($this->GetRSS($this->twitter_screenname));
 
 		if (is_array($this->news) && count($this->news) > 0){
@@ -47,25 +54,23 @@ class twittermodule extends gen_class {
 	 */
 	public function GetRSS($url){
 		$rss_string = null;
-		$cachetime = ($this->config('cachetime')) ? ($this->config('cachetime')*3600) : 3600;
-
-		$rss_string = $this->pdc->get('portal.module.twitter',false,true);
+		$rss_string = $this->pdc->get('portal.module.twitter.id'.$this->module_id,false,true);
 		
 		if (!$rss_string){
-			$sql = "SELECT updated,rss FROM __module_twitter";
-			$result = $this->db->query($sql);
+			$sql = "SELECT updated,rss FROM __module_twitter WHERE id=?";
+			$result = $this->db->prepare($sql)->execute($this->module_id);
 			if($row = $result->fetchAssoc()){
 				$this->updated = $row['updated'];
-				if( (time() - $this->updated) > $cachetime ){
+				if( (time() - $this->updated) > $this->cachetime ){
 					//normal update
-					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php");');
+					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'");');
 					
 					$rss_string = $row['rss'];
 				}elseif (isset($row['rss']) ){
 					$rss_string = $row['rss'];
 				}
 			}else{ //nothing in DB
-				if ($this->config('account') != ""){
+				if ($this->twitter_screenname != ""){
 					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'");');
 				}
 				return false;
@@ -86,9 +91,7 @@ class twittermodule extends gen_class {
 		return $rss_string;
 	}
 
-	public function updateRSS(){
-		$cachetime = ($this->config('cachetime')) ? ($this->config('cachetime')*3600) : 3600;
-		
+	public function updateRSS(){		
 		include_once($this->root_path.'libraries/twitter/codebird.class.php');
 		Codebird::setConsumerKey(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET); // static, see 'Using multiple Codebird instances'
 
@@ -103,16 +106,17 @@ class twittermodule extends gen_class {
 		$rss_string = serialize($objJSON);
 
 		if (strlen($rss_string)>1){
-			$this->pdc->del('portal.module.twitter');
-			$sql = "TRUNCATE TABLE __module_twitter ";
-			$this->db->query($sql);
+			$this->pdc->del('portal.module.twitter.id'.$this->module_id);
+			$sql = "DELETE FROM __module_twitter WHERE id=?";
+			$this->db->prepare($sql)->execute($this->module_id);
 			
 			$this->db->prepare("INSERT INTO __module_twitter :p")->set(array(
 					'updated'	=> time(),
 					'rss'		=> $rss_string,
+					'id'		=> $this->module_id,
 			))->execute();
 
-			$this->pdc->put('portal.module.twitter',$rss_string,$cachetime-5,false,true);
+			$this->pdc->put('portal.module.twitter.id'.$this->module_id,$rss_string,$this->cachetime-5,false,true);
 		}
 	}
 
@@ -142,7 +146,6 @@ class twittermodule extends gen_class {
 	 */
 	public function createTPLvar($news){
 		if (is_array($news)){
-			$maxitems = ($this->config('maxitems') == "") ? count($news) : $this->config('maxitems');
 			$table = '<table width="100%" cellspacing="0" cellpadding="2" class="colorswitch border-top">';
 			$bcout = "";
 			
@@ -223,7 +226,7 @@ class twittermodule extends gen_class {
 			);
 			
 
-			for ($i=0; $i<$maxitems; $i++){
+			for ($i=0; $i<$this->maxitems; $i++){
 					$data = $news[$i]['data'];	
 					
 					$author ='

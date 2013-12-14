@@ -30,9 +30,11 @@ class twitter_portal extends portal_generic {
 		'author'		=> 'GodMod',
 		'contact'		=> EQDKP_PROJECT_URL,
 		'description'	=> 'Shows a Module with Tweeds',
-		'lang_prefix'	=> 'twitter_'
+		'lang_prefix'	=> 'twitter_',
+		'multiple'		=> true,
 	);
 	protected static $positions = array('left1', 'left2', 'right');
+	
 	protected $settings	= array(
 		'account'	=> array(
 			'type'		=> 'text',
@@ -65,14 +67,14 @@ class twitter_portal extends portal_generic {
 
 	public function output() {	
 		include_once($this->root_path . 'portal/twitter/twittermodule.class.php');
-		$rss_feeds = registry::register('twittermodule');
+		$rss_feeds = registry::register('twittermodule', array($this->id));
 		$this->header = $this->user->lang('twitter');
 		return $rss_feeds->output_left;
 	}
 
 	public static function reset() {
-		register('pdc')->del('portal.module.twitter');
-		register('db')->query("TRUNCATE __module_twitter;");
+		register('pdc')->del('portal.module.twitter.id'.$this->id);
+		register('db')->prepare("DELETE FROM __module_twitter WHERE id=?;")->execute($this->id);
 	}
 }
 ?>
