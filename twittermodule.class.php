@@ -63,7 +63,7 @@ class twittermodule extends gen_class {
 				$this->updated = $row['updated'];
 				if( (time() - $this->updated) > $this->cachetime ){
 					//normal update
-					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'");');
+					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'&mid='.$this->module_id.'");');
 					
 					$rss_string = $row['rss'];
 				}elseif (isset($row['rss']) ){
@@ -71,7 +71,7 @@ class twittermodule extends gen_class {
 				}
 			}else{ //nothing in DB
 				if ($this->twitter_screenname != ""){
-					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'");');
+					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'&mid='.$this->module_id.'");');
 				}
 				return false;
 			}

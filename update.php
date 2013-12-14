@@ -21,6 +21,6 @@ define('EQDKP_INC', true);
 $eqdkp_root_path = './../../';
 include_once($eqdkp_root_path.'common.php');
 include_once($eqdkp_root_path.'portal/twitter/twittermodule.class.php');
-$twitter = registry::register('twittermodule');
+$twitter = registry::register('twittermodule', array(registry::register('input')->get('mid')));
 $twitter->updateRSS();
 ?>
