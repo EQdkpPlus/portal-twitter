@@ -22,6 +22,7 @@
 	$lang['twitter_f_account']		= 'Twitter-Account';
 	$lang['twitter_f_maxitems']		= 'Max. Shown Tweeds (empty = no limit)';
 	$lang['twitter_f_cachetime']	= 'Caching-time in hours (default: 1 hour)';
+	$lang['twitter_f_hideuserreplys']	= 'Hide Replys to Users';
 	$lang['pm_twitter_follow']		= 'follow %s at twitter';
 	$lang['pm_twitter_period']		= array("second", "minute", "hour", "day", "week", "month", "year", "decade");
 	$lang['pm_twitter_periods']		= array("seconds", "minutes", "hours", "days", "weeks", "months", "years", "decades");

@@ -24,7 +24,8 @@ class twittermodule extends gen_class {
 	private $module_id = 0;
 	private $cachetime = 3600;
 	private $maxitems = 5;
-
+	private $hideUserReplys = true;
+	
 	/**
 	 * Constructor
 	 *
@@ -36,6 +37,7 @@ class twittermodule extends gen_class {
 		$this->twitter_screenname = $this->config->get('account', 'pmod_'.$this->module_id);
 		$this->cachetime = ($this->config->get('cachetime', 'pmod_'.$this->module_id)) ? ($this->config->get('cachetime', 'pmod_'.$this->module_id)*3600) : 3600;
 		$this->maxitems = ($this->config->get('maxitems', 'pmod_'.$this->module_id)) ? ($this->config->get('maxitems', 'pmod_'.$this->module_id)) : 5;
+		$this->hideUserReplys = ($this->config->get('hideuserreplys', 'pmod_'.$this->module_id)) ? ($this->config->get('hideuserreplys', 'pmod_'.$this->module_id)) : true;
 		
 		$this->parseJSON($this->GetRSS($this->twitter_screenname));
 
@@ -130,6 +132,8 @@ class twittermodule extends gen_class {
 		$i = 0;
 		if (is_array($json)){
 			foreach ($json as $item){
+				if ($this->hideUserReplys && strlen($item['in_reply_to_user_id'])) continue;
+				
 				$this->news[$i]['text'] 		=  $item['text'];
 				$this->news[$i]['created_at']	=  $item['created_at'];
 				$this->news[$i]['data']			=  $item;
@@ -227,6 +231,8 @@ class twittermodule extends gen_class {
 			
 
 			for ($i=0; $i<$this->maxitems; $i++){
+					if (!isset($news[$i])) continue;
+					
 					$data = $news[$i]['data'];	
 					
 					$author ='

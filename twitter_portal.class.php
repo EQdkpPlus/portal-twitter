@@ -49,6 +49,10 @@ class twitter_portal extends portal_generic {
 			'type'		=>	'text',
 			'size'		=>	'3',
 		),
+		'hideuserreplys' => array(
+			'type'		=> 'radio',
+			'default'	=> true,
+		),
 	);
 	protected static $install	= array(
 		'autoenable'		=> '0',
