@@ -35,6 +35,8 @@ class twitter_portal extends portal_generic {
 	);
 	protected static $positions = array('left1', 'left2', 'right');
 	
+	protected static $apiLevel = 20;
+	
 	protected $settings	= array(
 		'account'	=> array(
 			'type'		=> 'text',
