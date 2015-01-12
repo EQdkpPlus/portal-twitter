@@ -153,7 +153,7 @@ class twittermodule extends gen_class {
 	 */
 	public function createTPLvar($news){
 		if (is_array($news)){
-			$table = '<table width="100%" cellspacing="0" cellpadding="2" class="colorswitch border-top">';
+			$table = '<table class="table fullwidth colorswitch border-top">';
 			$bcout = "";
 			
 			$this->tpl->add_css(
