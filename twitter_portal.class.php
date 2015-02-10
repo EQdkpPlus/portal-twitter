@@ -28,7 +28,7 @@ class twitter_portal extends portal_generic {
 	protected static $path		= 'twitter';
 	protected static $data		= array(
 		'name'			=> 'Twitter-Reader',
-		'version'		=> '0.2.0',
+		'version'		=> '0.2.1',
 		'icon'			=> 'fa-twitter',
 		'author'		=> 'GodMod',
 		'contact'		=> EQDKP_PROJECT_URL,
