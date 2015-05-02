@@ -37,6 +37,7 @@ $lang = array(
 	"twitter_f_maxitems" => 'Max. Shown Tweeds (empty = no limit)',
 	"twitter_f_cachetime" => 'Caching-time in hours (default: 1 hour)',
 	"twitter_f_hideuserreplys" => 'Hide Replys to Users',
+	"twitter_f_hideretweets" => 'Hide Retweets',
 	"pm_twitter_follow" => 'follow %s at twitter',
 	"pm_twitter_period" => array(
 	0 => 'second',

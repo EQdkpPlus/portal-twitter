@@ -58,6 +58,10 @@ class twitter_portal extends portal_generic {
 			'type'		=> 'radio',
 			'default'	=> true,
 		),
+		'hideretweets' => array(
+			'type'		=> 'radio',
+			'default'	=> 0,
+		),
 	);
 	protected static $install	= array(
 		'autoenable'		=> '0',
@@ -69,7 +73,7 @@ class twitter_portal extends portal_generic {
 		'CREATE TABLE IF NOT EXISTS __module_twitter (
 		`id` int(11) NOT NULL DEFAULT \'0\',
 		`updated` int(11) NOT NULL DEFAULT \'0\',
-		`rss` text COLLATE utf8_bin NOT NULL,
+		`rss` mediumtext COLLATE utf8_bin NOT NULL,
 		PRIMARY KEY (`id`)
 		) DEFAULT CHARSET=utf8 COLLATE=utf8_bin',
 	);

@@ -28,6 +28,7 @@ class twittermodule extends gen_class {
 	private $cachetime = 3600;
 	private $maxitems = 5;
 	private $hideUserReplys = true;
+	private $hideRetweets = false;
 	
 	/**
 	 * Constructor
@@ -41,6 +42,7 @@ class twittermodule extends gen_class {
 		$this->cachetime = ($this->config->get('cachetime', 'pmod_'.$this->module_id)) ? ($this->config->get('cachetime', 'pmod_'.$this->module_id)*3600) : 3600;
 		$this->maxitems = ($this->config->get('maxitems', 'pmod_'.$this->module_id)) ? ($this->config->get('maxitems', 'pmod_'.$this->module_id)) : 5;
 		$this->hideUserReplys = ($this->config->get('hideuserreplys', 'pmod_'.$this->module_id)) ? ($this->config->get('hideuserreplys', 'pmod_'.$this->module_id)) : true;
+		$this->hideRetweets = ($this->config->get('hideretweets', 'pmod_'.$this->module_id)) ? ($this->config->get('hideretweets', 'pmod_'.$this->module_id)) : false;
 		
 		$this->parseJSON($this->GetRSS($this->twitter_screenname));
 
@@ -136,6 +138,7 @@ class twittermodule extends gen_class {
 		if (is_array($json)){
 			foreach ($json as $item){
 				if ($this->hideUserReplys && strlen($item['in_reply_to_user_id'])) continue;
+				if ($this->hideRetweets && isset($item['retweeted_status'])) continue;
 				
 				$this->news[$i]['text'] 		=  $item['text'];
 				$this->news[$i]['created_at']	=  $item['created_at'];
