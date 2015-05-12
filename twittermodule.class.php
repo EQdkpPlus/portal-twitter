@@ -185,47 +185,20 @@ class twittermodule extends gen_class {
 				margin-top:6px;
 			}
 			
-			.tw_action_reply {
-				background-image: url('.$this->server_path.'portal/twitter/images/everything-spritev2.png);
-				background-position: 0px 0px;
-				width: 16px;
-				height: 16px;
-				cursor: pointer;
-				float: right;
-				margin-left: 5px;
-			}
-			.tw_action_reply:hover {
-				background-position: -16px 0px;
-			}
-			
-			.tw_action_retweet {
-				background-image: url('.$this->server_path.'portal/twitter/images/everything-spritev2.png);
-				background-position: -80px 0px;
-				width: 16px;
-				height: 16px;
-				cursor: pointer;
-				float: right;
-				margin-left: 5px;
-			}
-			.tw_action_retweet:hover {
-				background-position: -96px 0px;
-			}
-			
-			.tw_action_favorit {
-				background-image: url('.$this->server_path.'portal/twitter/images/everything-spritev2.png);
-				background-position: -32px 0px;
-				width: 16px;
-				height: 16px;
-				cursor: pointer;
-				float: right;
-				margin-left: 5px;
-			}
-			.tw_action_favorit:hover {
-				background-position: -48px 0px;
-			}
-			
 			.tw_actions {
 				float: right;
+				display: none;
+			}
+					
+			.tw_action_trigger:hover .tw_actions {
+				display: inline;
+			}
+					
+			.tw_actions div {
+				float: right;
+				cursor: pointer;
+				padding-left: 4px;
+				font-size: 16px;
 			}
 			
 			.tw_time{
@@ -269,18 +242,18 @@ class twittermodule extends gen_class {
 					</div>
 					';
 					
-					$bcout .='<tr><td>'.$this->twitterify($news[$i]['text'])."<br />
+					$bcout .='<tr><td class="tw_action_trigger">'.$this->twitterify($news[$i]['text'])."<br />
 					<div>
 						<div class=\"tw_time\">
 							<span class=\"small\">".$this->nicetime($news[$i]['created_at'])."</span>
 						</div>
 						<div class=\"tw_actions\">
 							
-							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\">&nbsp;
+							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\"><i class=\"fa fa-star\"></i>
 							</div>
-							<div class=\"tw_action_retweet\" onclick=\"window.open('https://twitter.com/intent/retweet?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_retweet')."\">&nbsp;
+							<div class=\"tw_action_retweet\" onclick=\"window.open('https://twitter.com/intent/retweet?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_retweet')."\"><i class=\"fa fa-retweet\"></i>
 							</div>
-							<div class=\"tw_action_reply\" onclick=\"window.open('https://twitter.com/intent/tweet?in_reply_to=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_answer')."\">&nbsp;
+							<div class=\"tw_action_reply\" onclick=\"window.open('https://twitter.com/intent/tweet?in_reply_to=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_answer')."\"><i class=\"fa fa-reply\"></i>
 							</div>
 						</div>
 						<div class=\"clear\"></div>
