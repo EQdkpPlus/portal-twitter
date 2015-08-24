@@ -20,7 +20,6 @@
  */
  
 class twittermodule extends gen_class {
-	public static $shortcuts = array('puf'=>'urlfetcher');
 
 	public $output_left = '';
 	public $news		= array();
@@ -35,7 +34,7 @@ class twittermodule extends gen_class {
 	 *
 	 * @return rss
 	 */
-	public function twittermodule($id){
+	public function __construct($id){
 		$this->module_id = $id;
 		$this->checkURL_first = true;
 		$this->twitter_screenname = $this->config->get('account', 'pmod_'.$this->module_id);
@@ -242,10 +241,10 @@ class twittermodule extends gen_class {
 					</div>
 					';
 					
-					$bcout .='<tr><td class="tw_action_trigger">'.$this->twitterify($news[$i]['text'])."<br />
+					$bcout .='<tr><td class="tw_action_trigger">'.$this->twitterify(sanitize($news[$i]['text']))."<br />
 					<div>
 						<div class=\"tw_time\">
-							<span class=\"small\">".$this->nicetime($news[$i]['created_at'])."</span>
+							<span class=\"small\">".$this->time->nice_date($news[$i]['created_at'], 14*86400)."</span>
 						</div>
 						<div class=\"tw_actions\">
 							
@@ -269,48 +268,12 @@ class twittermodule extends gen_class {
 	} # end function
 
 	public function twitterify($ret) {
-		$ret = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#u", "\\1<a href=\"\\2\" target=\"_blank\">\\2</a>", $ret);
-		$ret = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#u", "\\1<a href=\"http://\\2\" target=\"_blank\">\\2</a>", $ret);
-		$ret = preg_replace("/@(\w+)/u", "<a href=\"https://www.twitter.com/\\1\" target=\"_blank\">@\\1</a>", $ret);
-		$ret = preg_replace("/#(\w+)/u", "<a href=\"https://twitter.com/search?q=%23\\1&amp;src=hash\" target=\"_blank\">#\\1</a>", $ret);
+		$ret = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#u", "\\1<a href=\"\\2\" target=\"_blank\" rel=\"nofollow\">\\2</a>", $ret);
+		$ret = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#u", "\\1<a href=\"http://\\2\" target=\"_blank\" rel=\"nofollow\">\\2</a>", $ret);
+		$ret = preg_replace("/@(\w+)/u", "<a href=\"https://www.twitter.com/\\1\" target=\"_blank\" rel=\"nofollow\">@\\1</a>", $ret);
+		$ret = preg_replace("/[^\&]#(\w+)/u", "<a href=\"https://twitter.com/search?q=%23\\1&amp;src=hash\" target=\"_blank\" rel=\"nofollow\">#\\1</a>", $ret);
 		return $ret;
 	}
 
-	public function nicetime($date){
-		if(empty($date)) {
-			return "No date provided";
-		}
-
-		$lengths	= array("60","60","24","7","4.35","12","10");
-		$now		= time();
-		$unix_date	= strtotime($date);
-
-		// check validity of date
-		if(empty($unix_date)) {   
-			return "Bad date";
-		}
-
-		// is it future date or past date
-		if($now > $unix_date) {   
-			$difference		= $now - $unix_date;
-			$tense			= $this->user->lang(array('pm_twitter_tense', 1));
-		}else{
-			$difference		= $unix_date - $now;
-			$tense			= $this->user->lang(array('pm_twitter_tense', 0));
-		}
-
-		for($j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++) {
-			$difference /= $lengths[$j];
-		}
-
-		$difference = round($difference);
-		if($difference != 1) {
-			$period	= $this->user->lang(array('pm_twitter_periods', $j));
-		}else{
-			$period	= $this->user->lang(array('pm_twitter_period', $j));
-		}
-
-		return sprintf($this->user->lang('pm_twitter_format'), "$difference $period", $tense);
-	}
 }// end of class
 ?>
