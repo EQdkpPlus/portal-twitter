@@ -248,7 +248,7 @@ class twittermodule extends gen_class {
 						</div>
 						<div class=\"tw_actions\">
 							
-							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\"><i class=\"fa fa-star\"></i>
+							<div class=\"tw_action_favorit\" onclick=\"window.open('https://twitter.com/intent/favorite?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_favorit')."\"><i class=\"fa fa-heart\"></i>
 							</div>
 							<div class=\"tw_action_retweet\" onclick=\"window.open('https://twitter.com/intent/retweet?tweet_id=".$data['id_str']."', '', 'width=500,height=350,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no'); return false;\" title=\"".$this->user->lang('pm_twitter_retweet')."\"><i class=\"fa fa-retweet\"></i>
 							</div>
