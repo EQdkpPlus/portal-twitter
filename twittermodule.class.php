@@ -271,7 +271,7 @@ class twittermodule extends gen_class {
 		$ret = preg_replace("#(^|[\n ])([\w]+?://[\w]+[^ \"\n\r\t< ]*)#u", "\\1<a href=\"\\2\" target=\"_blank\" rel=\"nofollow\">\\2</a>", $ret);
 		$ret = preg_replace("#(^|[\n ])((www|ftp)\.[^ \"\t\n\r< ]*)#u", "\\1<a href=\"http://\\2\" target=\"_blank\" rel=\"nofollow\">\\2</a>", $ret);
 		$ret = preg_replace("/@(\w+)/u", "<a href=\"https://www.twitter.com/\\1\" target=\"_blank\" rel=\"nofollow\">@\\1</a>", $ret);
-		$ret = preg_replace("/[^\&]#(\w+)/u", "<a href=\"https://twitter.com/search?q=%23\\1&amp;src=hash\" target=\"_blank\" rel=\"nofollow\">#\\1</a>", $ret);
+		$ret = preg_replace("/[^\&]#(\w+)/u", " <a href=\"https://twitter.com/search?q=%23\\1&amp;src=hash\" target=\"_blank\" rel=\"nofollow\">#\\1</a>", $ret);
 		return $ret;
 	}
 
