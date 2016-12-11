@@ -65,20 +65,24 @@ class twittermodule extends gen_class {
 		if (!$rss_string){
 			$sql = "SELECT updated,rss FROM __module_twitter WHERE id=?";
 			$result = $this->db->prepare($sql)->execute($this->module_id);
-			if($row = $result->fetchAssoc()){
-				$this->updated = $row['updated'];
-				if( (time() - $this->updated) > $this->cachetime ){
-					//normal update
-					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'&mid='.$this->module_id.'");');
-					
-					$rss_string = $row['rss'];
-				}elseif (isset($row['rss']) ){
-					$rss_string = $row['rss'];
+			if ($result){
+				if($row = $result->fetchAssoc()){
+					$this->updated = $row['updated'];
+					if( (time() - $this->updated) > $this->cachetime ){
+						//normal update
+						$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'&mid='.$this->module_id.'");');
+						
+						$rss_string = $row['rss'];
+					}elseif (isset($row['rss']) ){
+						$rss_string = $row['rss'];
+					}
+				}else{ //nothing in DB
+					if ($this->twitter_screenname != ""){
+						$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'&mid='.$this->module_id.'");');
+					}
+					return false;
 				}
-			}else{ //nothing in DB
-				if ($this->twitter_screenname != ""){
-					$this->tpl->add_js('$.get("'.$this->server_path.'portal/twitter/update.php'.$this->SID.'&mid='.$this->module_id.'");');
-				}
+			} else {
 				return false;
 			}
 		}
